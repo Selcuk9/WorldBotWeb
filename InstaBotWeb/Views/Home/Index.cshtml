@@ -1,0 +1,46 @@
+﻿
+@{
+	ViewData["Title"] = "View";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+	<title>Document</title>
+</head>
+<body>
+	<div class="content-temp">
+		<a class="btn btn-primary" asp-action="Login" asp-controller="Account">Войти</a>
+		<a class="btn btn-secondary" asp-action="Register" asp-controller="Account" >Создать аккаунт</a>
+	</div>
+	<section class="pb-0 pt-5 pt-lg-6">
+		<div class="container border-bottom">
+			<div class="row align-items-center justify-content-between">
+				<div class="col-lg-7 col-xl-6 text-center px-md-6 px-lg-0">
+					<h1 class="display-4">Сегодня ты увеличишь продажи в Instagram на 67%.</h1>
+					<p class="lead">
+						Чат-бот в Instagram Stories - это что-то новенькое, да? Узнай о новом инструменте, который невероятно увеличивает продажи.
+					</p>
+					<a href="/register" class="btn btn-primary btn-lg mt-3">Начать без подготовки</a>
+					<div class="d-flex justify-content-center mt-2 mb-3">
+						<a href="#whatischatbot" data-smooth-scroll="" class="d-flex align-items-center">
+							<span class="text-small ml-2">Узнать больше</span>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-4 pb-4">
+					<div class="mobile-screenshot rotate-right mx-auto layer-2" style="width: 100%;max-width: 240px;">
+						<video src="/landing/video/stories.mp4" autoplay="" loop="" playsinline="" muted=""></video>
+						<img src="img/iphone-xr.svg" style="width: 248px; height: 450px ;" alt="iPhone XR">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div style="height: 500000px;"></div> -->
+	</section>
+</body>
+</html>
