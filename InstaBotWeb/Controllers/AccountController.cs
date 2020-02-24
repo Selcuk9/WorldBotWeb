@@ -8,8 +8,10 @@ using InstaBotWeb.Models.DataBaseContext;
 using InstaBotWeb.ViewsModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace InstaBotWeb.Controllers
 {
@@ -20,6 +22,22 @@ namespace InstaBotWeb.Controllers
         {
             db = context;
         }
+        [HttpGet]
+        [Authorize]
+        public IActionResult AOuth(string serializedModel)
+        {
+            // Deserialize your model back to a list again here.
+            List<InstaUser> model = null;
+            try
+            {
+                model = JsonConvert.DeserializeObject<List<InstaUser>>(serializedModel);
+            }
+            catch (Exception ex){}
+          
+            ViewBag.UserMail = User.Identity.Name;
+            return View("Profile", model);
+        }
+
 
         [HttpGet]
         public IActionResult Login()
@@ -37,7 +55,7 @@ namespace InstaBotWeb.Controllers
                 if(user != null)
                 {
                     await Authenticate(model.Email); // // аутентификация
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("AOuth", "Account");
                 }
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
@@ -60,11 +78,11 @@ namespace InstaBotWeb.Controllers
 
                 if(user == null)
                 {
-                    db.DbUser.Add(new User() { });
+                    db.DbUser.Add(new User() {Email = model.Email , Password = model.Password });
                     await db.SaveChangesAsync();
-                    //await Authenticate(model.Email); // аутентификация
+                    await Authenticate(model.Email); // аутентификация
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("AOuth", "Account");
                 }
                 else
                 {

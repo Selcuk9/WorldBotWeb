@@ -1,0 +1,41 @@
+﻿@model List<InstaUser>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/styleProfile.css">
+    <title>Profile</title>
+</head>
+<body>
+    <div class="main-box">
+        <div class="setting">
+            <a class="btn btn-primary" asp-action="InstagramAdding" asp-controller="Instagram">Добавить аккаунт</a>
+            <a class="btn btn-secondary" asp-action="" asp-controller="">Включить бота</a>
+
+            <ol type="1">
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <li>@item.UserName</li>
+                    }
+                }
+
+            </ol>
+        </div>
+
+        <div class="data-profile">
+            <div><img style="width: 150px; height: 150px;" id="img-prof" src="~/img/photoProfile.png" alt="png"></div>
+            <strong>Email: @ViewBag.UserMail</strong>
+            <a class="btn btn-primary" asp-action="Logout" asp-controller="Account">Выйти</a>
+        </div>
+
+    </div>
+</body>
+</html>
