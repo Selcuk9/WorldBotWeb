@@ -1,0 +1,26 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+body {
+	background-image: url(https://instaturbo.ru/images/blog/5b7c82fdddf48.jpg);
+	font-family: 'Roboto', sans-serif;
+}
+h1 {
+	color: antiquewhite;
+	background-color: rgba(9, 3, 3, 0.28);
+}
+.lead {
+	color: rgb(0, 0, 0) ;
+}
+.img-phone {
+	width: 220px;
+	height: 420px;
+	top: 10px;
+}
+
+
+
+
+
+
+
+
