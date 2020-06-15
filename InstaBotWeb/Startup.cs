@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleAuthorize.Crypto;
 using System.Net;
 
 namespace InstaBotWeb
@@ -25,6 +26,7 @@ namespace InstaBotWeb
 
             services.AddDbContext<ApplicationContext>(options =>
                  options.UseSqlServer(connection));
+            services.AddTransient<IHashMethod, MD5Hash>();
 
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -40,22 +42,11 @@ namespace InstaBotWeb
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseDeveloperExceptionPage();
-
-
-
-
-            app.UseAuthentication();    // аутентификация
-            
-
-
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-
-
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

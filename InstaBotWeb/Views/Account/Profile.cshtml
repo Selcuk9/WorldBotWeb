@@ -1,41 +1,49 @@
-﻿@model List<InstaUser>
+﻿@model UserProfile
 @{
-    Layout = null;
+	Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/styleProfile.css">
-    <title>Profile</title>
+    <title>UserAccaunt</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/profile-styles/main-profile.css">
 </head>
 <body>
-    <div class="main-box">
-        <div class="setting">
-            <a class="btn btn-primary" asp-action="InstagramAdding" asp-controller="Instagram">Добавить аккаунт</a>
-            <a class="btn btn-secondary" asp-action="" asp-controller="">Включить бота</a>
-
-            <ol type="1">
-                @if (Model != null)
-                {
-                    foreach (var item in Model)
-                    {
-                        <li>@item.UserName</li>
-                    }
-                }
-
-            </ol>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 text-center avatar-user">
+                    <img src="@Model.AvatarPath" alt="avatar" style="width: 120px; height: 112px">
+                </div>
+                <div class="col-lg-6  offset-lg-3 text-center">
+					<div class="data-user">
+						<strong>Name: @Model.FirstName LastName: @Model.LastName</strong><br>
+						<strong>Email: </strong>
+						<p>@Model.Email</p><br>
+						<a asp-action="Logout" asp-controller="Account" class="btn-secondary">Выйти</a>
+					</div>
+                </div>
+            </div>
+            <div class="items-profile">
+				<ul class="row text-center">
+					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+						<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/telegram_icon.svg" alt="user"></a>
+					</li>
+					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+						<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/vk_icon.svg" alt="user"></a>
+					</li>
+					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+						<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/Instagram_icon.svg" alt="user"></a>
+					</li>
+					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+						<a asp-action="ChangesProfile" asp-controller="Account"><img style="width: 112px; height: 112px;" src="/img/profile-img/settings_icon.svg" alt="user"></a>
+					</li>
+				</ul>
+            </div>
         </div>
-
-        <div class="data-profile">
-            <div><img style="width: 150px; height: 150px;" id="img-prof" src="~/img/photoProfile.png" alt="png"></div>
-            <strong>Email: @ViewBag.UserMail</strong>
-            <a class="btn btn-primary" asp-action="Logout" asp-controller="Account">Выйти</a>
-        </div>
-
     </div>
 </body>
 </html>

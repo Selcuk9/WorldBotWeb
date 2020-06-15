@@ -1,0 +1,57 @@
+
+h1 {
+    display: block;
+    text-align: center;
+}
+
+.label-input {
+    display: block;
+}
+
+.inputins {
+    display: inline-block;
+    margin: 15px;
+    width: 11.5rem;
+}
+
+.full_input {
+    display: inline-block;
+}
+
+label {
+    font-size: larger;
+    font-weight: 700;
+}
+
+.btn-form {
+    background-color: blueviolet;
+    border: 1rem;
+    margin-top: 1rem;
+    font-weight: 500;
+    color: aliceblue;
+}
+
+    .btn-form:hover {
+        box-shadow: 0 0 10px rgba(0,0,0,0.7);
+        color: black;
+    }
+
+.label-input {
+    text-align: left;
+    margin-top: 1rem;
+}
+
+    .label-input:after {
+        content: " *";
+        color: red;
+    }
+
+.input-failed {
+    border-color: red;
+    background-color: lightcoral;
+}
+
+.input-success {
+    border-color: green;
+    background-color: limegreen;
+}

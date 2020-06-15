@@ -1,32 +1,47 @@
 ﻿@model RegisterModel
 
+@{
+	Layout = "_Layout";
+}
+
 <head>
-	<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-	<link href="~/css/site.css" rel="stylesheet" />
+	<link rel="stylesheet" href="~/css/form-styles/reg.css">
 </head>
-<h2>Регистрация</h2>
-<body>
-	<form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
-		<div asp-validation-summary="ModelOnly"></div>
-		<div>
-			<div>
-				<label asp-for="Email">Введите Email</label><br />
-				<input type="text" asp-for="Email" />
-				<span asp-validation-for="Email" />
-			</div>
-			<div>
-				<label asp-for="Password">Введите пароль</label><br />
-				<input asp-for="Password" />
-				<span asp-validation-for="Password" />
-			</div>
-			<div>
-				<label asp-for="ConfirmPassword">Повторите пароль</label><br />
-				<input asp-for="ConfirmPassword" />
-				<span asp-validation-for="ConfirmPassword" />
-			</div>
-			<div>
-				<input type="submit" value="Регистрация" />
-			</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12 text-center">
+			<img src="https://image.freepik.com/free-vector/_100456-34.jpg" style="width: 10rem; height: 10rem;" alt="jpg">
+			<h1>Регистрация</h1>
 		</div>
-	</form>
-</body>
+	</div>
+	<div class="row">
+		<div class="col-lg-12 text-center">
+			<form asp-controller="Account" asp-action="Register" method="post">
+				<div class="inputins">
+					<label asp-for="FirstName" class="label-input">Имя</label>
+					<input asp-for="FirstName" type="text" id="first_name" class="form-control">
+				</div>
+				<div class="inputins">
+					<label asp-for="LastName" class="label-input">Фамилия</label>
+					<input asp-for="LastName" type="text" id="last_name" class="form-control">
+				</div><br>
+				<div class="full_input">
+					<label asp-for="Email" class="label-input">Email</label>
+					<input asp-for="Email" type="email" id="email" class="form-control" style="width: 25.3rem">
+				</div><br>
+				<div class="full_input">
+					<label asp-for="Password" class="label-input">Пароль</label>
+					<input asp-for="Password" type="password" id="password" class="form-control" style="width: 25.3rem">
+				</div><br>
+				<div class="full_input">
+					<label asp-for="ConfirmPassword" class="label-input">Повторите пароль</label>
+					<input asp-for="ConfirmPassword" type="password" id="confirm_password" class="form-control" style="width: 25.3rem">
+				</div><br>
+				<input type="submit" class="btn-brand btn-lg btn-form" value="Регистрация" style="width: 25.3rem">
+			</form>
+			<div>Уже есть аккаунт? <a href="/Account/Login">Вход</a></div>
+		</div>
+	</div>
+	<script src="/js/register-script/reg-script.js"></script>
+</div>

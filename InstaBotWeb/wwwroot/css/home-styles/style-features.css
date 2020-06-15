@@ -1,0 +1,24 @@
+.prices-font{
+    text-align: center;
+}
+.features-block{
+    margin-top: 5rem;
+}
+.features-block p{
+    margin-top: 1rem;
+    font-weight: 500;
+}
+.features-font p{
+    margin-top: 2rem;
+    font-weight: 700;
+}
+.facebook-box , .instagram-box, .vk-box, .twitter-box{
+    background-color: blueviolet;
+    border-radius: 5px;
+    padding: 25px;
+    padding-bottom: 14rem;
+}
+
+.features{
+    background-image: url(https://lightphotos.ru/image/full/data/aaa/fst/blue.jpg);
+}

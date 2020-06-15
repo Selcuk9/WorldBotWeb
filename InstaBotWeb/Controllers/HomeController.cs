@@ -15,11 +15,13 @@ namespace InstaBotWeb.Controllers
         
         public IActionResult Index()
         {
-            if(User.Claims.Count() == 0)
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("AOuth", "Account");
+            }
             else
             {
-              return RedirectToAction("AOuth", "Account");
+                return View();
             }
         }
     }

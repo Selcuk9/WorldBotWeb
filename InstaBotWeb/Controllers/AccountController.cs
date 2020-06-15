@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using InstaBotWeb.Models;
 using InstaBotWeb.Models.DataBaseContext;
@@ -9,63 +11,92 @@ using InstaBotWeb.ViewsModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SimpleAuthorize.Crypto;
 
 namespace InstaBotWeb.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ApplicationContext db;
-        public AccountController(ApplicationContext context)
+        private IHashMethod hash;
+        private IWebHostEnvironment environment;
+        public AccountController(ApplicationContext context, IHashMethod hash, IWebHostEnvironment environment)
         {
             db = context;
+            this.hash = hash;
+            this.environment = environment;
         }
+
+        private int GetIdUser()
+        {
+           // ViewBag.UserMail = User.Identity.Name;
+            var claim = User.Claims.ToList();
+            var idUser = claim[1].Type == "BaseId" ? claim[1].Value : null;
+            return int.Parse(idUser);
+        }
+
         [HttpGet]
         [Authorize]
-        public IActionResult AOuth(string serializedModel)
+        public IActionResult AOuth()
         {
-            // Deserialize your model back to a list again here.
-            List<InstaUser> model = null;
-            try
+            //user = JsonConvert.DeserializeObject<User>(serializedModel);
+
+            var idUser = GetIdUser();
+            var userData = db.DbUser.FirstOrDefault(ud => ud.Id == idUser);
+                var dataProfile = new UserProfile()
             {
-                model = JsonConvert.DeserializeObject<List<InstaUser>>(serializedModel);
-            }
-            catch (Exception ex){}
-          
-            ViewBag.UserMail = User.Identity.Name;
-            return View("Profile", model);
+                LastName = userData.LastName,
+                FirstName = userData.FirstName,
+                Email = userData.Email,
+                AvatarPath = userData.AvatarProfile
+            };
+            return View("Profile", dataProfile);
         }
 
 
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("AOuth", "Account");
+            }
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
+           
             if (ModelState.IsValid)
             {
-                User user = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                var typeHash = MD5.Create();
+                var passHash = hash.GetHashCode(typeHash, model.Password);
+                User user = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == passHash);
 
-                if(user != null)
+                if (user != null)
                 {
-                    await Authenticate(model.Email); // // аутентификация
+                    string userId = user.Id.ToString();
+                    await Authenticate(model.Email, userId); // аутентификация
                     return RedirectToAction("AOuth", "Account");
                 }
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
-            
+
             return View(model);
         }
 
         [HttpGet]
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("AOuth", "Account");
+            }
             return View();
         }
 
@@ -76,11 +107,25 @@ namespace InstaBotWeb.Controllers
             {
                 User user = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email);
 
-                if(user == null)
+                if (user == null)
                 {
-                    db.DbUser.Add(new User() {Email = model.Email , Password = model.Password });
+                    var typeHash = MD5.Create();
+                    var passHash = hash.GetHashCode(typeHash, model.Password);
+                    string email = model.Email;
+                    db.DbUser.Add(new User() { Email = email,
+                        Password = passHash,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        AvatarProfile = @"/img/photousers/avatar_icon.svg",
+                        
+                    });
+
                     await db.SaveChangesAsync();
-                    await Authenticate(model.Email); // аутентификация
+
+                    User userReady = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email);
+                    string userId = userReady.Id.ToString();
+
+                    await Authenticate(model.Email, userId); // аутентификация
 
                     return RedirectToAction("AOuth", "Account");
                 }
@@ -92,21 +137,46 @@ namespace InstaBotWeb.Controllers
             return View(model);
         }
 
-
         /// <summary>
         /// it's needs will learn
         /// </summary>
-        private async Task Authenticate(string userName)
+        private async Task Authenticate(string userName, string idUser)
         {
             // создаем один claim
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim("BaseId",idUser)
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        }
+
+        [Authorize]
+        public IActionResult ChangesProfile()
+        {
+            return View("ChangeProfile");
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangesProfile(UserProfile profile)
+        {
+            string fileName = profile.Avatar.FileName;
+            string path = @"/img/photoUsers/" + fileName;
+            string pathPhoto = environment.WebRootPath + path;
+            using (var photo = new FileStream(pathPhoto, FileMode.Create))
+            {
+                await profile.Avatar.CopyToAsync(photo);
+            }
+            var chUser = db.DbUser.Where(uId => uId.Id == GetIdUser()).FirstOrDefault();
+            chUser.LastName = profile.LastName;
+            chUser.FirstName = profile.FirstName;
+            chUser.AvatarProfile = @$"/img/photoUsers/{fileName}";
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("AOuth", "Account");
         }
 
         public async Task<IActionResult> Logout()

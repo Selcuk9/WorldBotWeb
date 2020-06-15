@@ -1,0 +1,16 @@
+﻿body {
+	background-color: rgb(55, 122, 151);
+}
+
+.add-picture {
+	text-align: start;
+}
+
+.btn-form {
+	margin-top: 0.4rem;
+}
+
+form div {
+	margin: 0.5rem;
+}
+	

@@ -1,0 +1,35 @@
+﻿body {
+	background-color: rgb(55, 122, 151);
+}
+
+.avatar-user {
+	border-radius: 50%;
+}
+
+li {
+	list-style-type: none;
+	display: inline-block;
+	margin: 0px;
+	margin-top: 1rem;
+}
+
+img {
+	margin: 0px;
+}
+
+ul {
+	padding-inline-start: 0px;
+}
+
+li :hover {
+	-webkit-transform: scale(1.2);
+	-ms-transform: scale(1.2);
+	transform: scale(1.2);
+}
+
+@media (max-width: 1200px) {
+	.items li {
+		height: 5rem;
+		width: 5rem;
+	}
+}
