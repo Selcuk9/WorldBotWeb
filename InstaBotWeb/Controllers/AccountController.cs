@@ -22,8 +22,8 @@ namespace InstaBotWeb.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationContext db;
-        private IHashMethod hash;
-        private IWebHostEnvironment environment;
+        private readonly IHashMethod hash;
+        private readonly IWebHostEnvironment environment;
         public AccountController(ApplicationContext context, IHashMethod hash, IWebHostEnvironment environment)
         {
             db = context;

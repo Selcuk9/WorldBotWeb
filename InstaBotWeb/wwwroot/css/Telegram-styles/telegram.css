@@ -1,0 +1,30 @@
+﻿.col-lg-4 {
+	border: 1px solid red;
+}
+
+.main {
+	background-color: aqua;
+	height: 100vh;
+}
+
+.control-panel {
+	background-color: chartreuse;
+	height: 100vh;
+}
+
+.chat-panel {
+	background-color: cornflowerblue;
+	height: 100vh;
+}
+
+.btn-add {
+}
+
+li {
+	list-style-type: none;
+	word-wrap: break-word;
+}
+
+	li:hover {
+		background-color: brown;
+	}
