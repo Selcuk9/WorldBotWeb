@@ -2,7 +2,9 @@
 const listBots = document.querySelector('.list-bots');
 const tokenInput = document.getElementById('token');
 const listUl = document.querySelector('.list-bots');
-const url = 'https://localhost:44352/Telegram/GetBot';
+const url = '/Telegram/AddBot';
+const urlRun = '/Telegram/RunBot';
+const urlStop = '/Telegram/StopBot';
 
 btnAdd.addEventListener('click', async function () {
     if (tokenInput.value != "" && tokenInput.value != null) {
@@ -26,3 +28,17 @@ btnAdd.addEventListener('click', async function () {
 function GetChat(event) {
     alert(event.target.id);
 }
+
+
+let btnRun = document.getElementById('btn-run'),
+    btnStop = document.getElementById('btn-stop');
+btnRun.addEventListener('click', function () {
+    fetch(urlRun, {
+        method: 'POST'
+    });
+});
+btnStop.addEventListener('click', function () {
+    fetch(urlStop, {
+        method: 'POST'
+    });
+})

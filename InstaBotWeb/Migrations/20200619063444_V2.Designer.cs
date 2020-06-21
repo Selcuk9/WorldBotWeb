@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstaBotWeb.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200615125141_V1")]
-    partial class V1
+    [Migration("20200619063444_V2")]
+    partial class V2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,29 +20,46 @@ namespace InstaBotWeb.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("InstaBotWeb.Models.InstaUser", b =>
+            modelBuilder.Entity("InstaBotWeb.Models.Telegram.TelegramBot", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("TokenId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Token")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("UsernameBots")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TokenId");
 
-                    b.ToTable("DbInstaUser");
+                    b.ToTable("TelegramBots");
+                });
+
+            modelBuilder.Entity("InstaBotWeb.Models.Telegram.UserTelegram", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BotId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "BotId");
+
+                    b.HasIndex("BotId");
+
+                    b.ToTable("UserTelegrams");
                 });
 
             modelBuilder.Entity("InstaBotWeb.Models.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AvatarProfile")
@@ -67,20 +84,22 @@ namespace InstaBotWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DbUser");
+                    b.ToTable("DbUsers");
                 });
 
-            modelBuilder.Entity("InstaBotWeb.Models.UserInstaAndUser", b =>
+            modelBuilder.Entity("InstaBotWeb.Models.Telegram.UserTelegram", b =>
                 {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.HasOne("InstaBotWeb.Models.Telegram.TelegramBot", "TelegramBot")
+                        .WithMany("UserTelegrams")
+                        .HasForeignKey("BotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<long>("InstaUserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("UserId", "InstaUserId");
-
-                    b.ToTable("InstaUserAndAccountUser");
+                    b.HasOne("InstaBotWeb.Models.User", "User")
+                        .WithMany("UserTelegrams")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

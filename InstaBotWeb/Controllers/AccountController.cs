@@ -46,7 +46,7 @@ namespace InstaBotWeb.Controllers
             //user = JsonConvert.DeserializeObject<User>(serializedModel);
 
             var idUser = GetIdUser();
-            var userData = db.DbUser.FirstOrDefault(ud => ud.Id == idUser);
+            var userData = db.DbUsers.FirstOrDefault(ud => ud.Id == idUser);
                 var dataProfile = new UserProfile()
             {
                 LastName = userData.LastName,
@@ -76,7 +76,7 @@ namespace InstaBotWeb.Controllers
             {
                 var typeHash = MD5.Create();
                 var passHash = hash.GetHashCode(typeHash, model.Password);
-                User user = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == passHash);
+                User user = await db.DbUsers.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == passHash);
 
                 if (user != null)
                 {
@@ -105,14 +105,14 @@ namespace InstaBotWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email);
+                User user = await db.DbUsers.FirstOrDefaultAsync(u => u.Email == model.Email);
 
                 if (user == null)
                 {
                     var typeHash = MD5.Create();
                     var passHash = hash.GetHashCode(typeHash, model.Password);
                     string email = model.Email;
-                    db.DbUser.Add(new User() { Email = email,
+                    db.DbUsers.Add(new User() { Email = email,
                         Password = passHash,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
@@ -122,7 +122,7 @@ namespace InstaBotWeb.Controllers
 
                     await db.SaveChangesAsync();
 
-                    User userReady = await db.DbUser.FirstOrDefaultAsync(u => u.Email == model.Email);
+                    User userReady = await db.DbUsers.FirstOrDefaultAsync(u => u.Email == model.Email);
                     string userId = userReady.Id.ToString();
 
                     await Authenticate(model.Email, userId); // аутентификация
@@ -170,7 +170,7 @@ namespace InstaBotWeb.Controllers
             {
                 await profile.Avatar.CopyToAsync(photo);
             }
-            var chUser = db.DbUser.Where(uId => uId.Id == GetIdUser()).FirstOrDefault();
+            var chUser = db.DbUsers.Where(uId => uId.Id == GetIdUser()).FirstOrDefault();
             chUser.LastName = profile.LastName;
             chUser.FirstName = profile.FirstName;
             chUser.AvatarProfile = @$"/img/photoUsers/{fileName}";

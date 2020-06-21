@@ -1,3 +1,5 @@
+using InstaBotWeb.Classes;
+using InstaBotWeb.Controllers;
 using InstaBotWeb.Models.DataBaseContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleAuthorize.Crypto;
 using System.Net;
+using System.Threading;
+using TelegramSystem;
 
 namespace InstaBotWeb
 {
@@ -23,11 +27,14 @@ namespace InstaBotWeb
         public void ConfigureServices(IServiceCollection services)
         {   
             string connection = Configuration.GetConnectionString("DefaultConnection");
+    
 
             services.AddDbContext<ApplicationContext>(options =>
                  options.UseSqlServer(connection));
+
             services.AddTransient<IHashMethod, MD5Hash>();
 
+            services.AddSingleton<Pool>(Pool.Instance);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions

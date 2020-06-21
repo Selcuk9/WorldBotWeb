@@ -1,4 +1,5 @@
-﻿using InstaBotWeb.ViewsModels;
+﻿using InstaBotWeb.Models.Telegram;
+using InstaBotWeb.ViewsModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,44 +14,60 @@ namespace InstaBotWeb.Models.DataBaseContext
             : base(options)
         {
             //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
-        public DbSet<User> DbUser { get; set; }
-        public DbSet<InstaUser> DbInstaUser { get; set; }
-        public DbSet<UserInstaAndUser> InstaUserAndAccountUser { get; set; }
+        public DbSet<User> DbUsers { get; set; }
+        public DbSet<TelegramBot> TelegramBots { get; set; }
+        public DbSet<UserTelegram> UserTelegrams { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserInstaAndUser>()
-                 .HasKey(u => new { u.UserId, u.InstaUserId });
-
-
             modelBuilder.Entity<User>()
                 .HasKey(uId => uId.Id);
-
             modelBuilder.Entity<User>()
                 .Property(uId => uId.Id)
                 .ValueGeneratedOnAdd();
-
-
             modelBuilder.Entity<User>()
                 .Property(uId => uId.Password)
                 .IsRequired();
-
             modelBuilder.Entity<User>()
                 .Property(uId => uId.Email)
                 .IsRequired();
-
             modelBuilder.Entity<User>()
                 .Property(uId => uId.FirstName)
                 .IsRequired();
-
             modelBuilder.Entity<User>()
                 .Property(uId => uId.LastName)
                 .IsRequired();
 
+
+            modelBuilder.Entity<UserTelegram>()
+                .HasKey(k => new {k.UserId, k.BotId});
+
+            //Связь many-to-many
+            modelBuilder.Entity<UserTelegram>()
+                .HasOne(u => u.User)
+                .WithMany(uT => uT.UserTelegrams)
+                .HasForeignKey(uId => uId.UserId);
+
+            modelBuilder.Entity<UserTelegram>()
+                .HasOne(bId => bId.TelegramBot)
+                .WithMany(uT => uT.UserTelegrams)
+                .HasForeignKey(bId => bId.BotId);
+            //
+            modelBuilder.Entity<TelegramBot>()
+                .HasKey(uId => uId.TokenId);
+
+            modelBuilder.Entity<TelegramBot>()
+                .Property(uId => uId.TokenId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<TelegramBot>()
+               .Property(t => t.Token)
+               .IsRequired();
+
+            modelBuilder.Entity<TelegramBot>()
+                .Property(uB => uB.UsernameBots)
+                .IsRequired();
         }
-
-
-        
     }
 }
