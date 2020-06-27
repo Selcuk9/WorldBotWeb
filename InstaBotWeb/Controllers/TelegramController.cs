@@ -16,13 +16,16 @@ using TelegramSystem;
 
 namespace InstaBotWeb.Controllers
 {
+    /// <summary>
+    /// Данный коннтроллер для работы с телеграм ботом
+    /// </summary>
     [Authorize]
     public class TelegramController : Controller
     {
         private readonly ApplicationContext dbContext;
         private ClientBot clientBot;
-        private readonly Pool threads;
-        public TelegramController(ApplicationContext db, Pool threads)
+        private readonly Dictionary<int,List<Pool>> threads;
+        public TelegramController(ApplicationContext db, Dictionary<int, List<Pool>> threads)
         {
             this.threads = threads;
             dbContext = db;
@@ -33,6 +36,10 @@ namespace InstaBotWeb.Controllers
             var botsTelega = GetBots();
             return View("Telegram",botsTelega);
         }
+        /// <summary>
+        /// Возврашаем список токенов ботов телеграм
+        /// </summary>
+        /// <returns></returns>
         private List<DataBot> GetBots()
         {
             var userId = ClaimUser.GetIdUser(User);
@@ -75,29 +82,45 @@ namespace InstaBotWeb.Controllers
             }
             return botJson;
         }
-       
+       /// <summary>
+       /// Запускаем бота и добавляем токен задач в сиписок с ключом
+       /// Каждый пользователь имеет свои задачи
+       /// </summary>
         [HttpPost]
         public void RunBot()
         {
+            var pool = Pool.Instance;
+            var idUser = ClaimUser.GetIdUser(User);
+            var threadsList = new List<Pool>(); 
             var tokenBots = GetBots();
             foreach (var item in tokenBots)
             {
                 clientBot = new ClientBot(item.TokenBot);
                 clientBot.GetBot();
                 clientBot.RunBotAsync(true);
-
+     
                 var cancellationTokenSource = clientBot.tokenPools.Dequeue();
-                threads.ClientPools.Enqueue(clientBot.botClient);
-                threads.TokePools.Enqueue(cancellationTokenSource);
+                pool.ClientPools.Enqueue(clientBot.botClient);
+                pool.TokePools.Enqueue(cancellationTokenSource);
+
             }
+            threadsList.Add(pool);
+            threads.Add(idUser, threadsList);
+
         }
         [HttpPost]
         public void StopBot()
         {
-            for (int i = 0; i < threads.TokePools.Count; i++)
+            var idUser = ClaimUser.GetIdUser(User);
+            if (threads.ContainsKey(idUser))
             {
-                threads.TokePools.Peek().Cancel();
-                threads.ClientPools.Peek().StopReceiving();
+                var myThreads = threads[idUser];
+                foreach (var pool in myThreads)
+                {
+                    pool.TokePools.Dequeue().Cancel();
+                    pool.ClientPools.Dequeue().StopReceiving();
+                }
+                threads.Remove(idUser);
             }
         }
         

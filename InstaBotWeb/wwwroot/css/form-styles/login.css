@@ -1,1 +1,7 @@
-﻿
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+body {
+	font-family: 'Roboto', sans-serif;
+}
+.form-login {
+	padding:2rem;
+}

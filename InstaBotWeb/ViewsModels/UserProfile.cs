@@ -13,5 +13,7 @@ namespace InstaBotWeb.ViewsModels
         public string LastName { get; set; }
         public IFormFile Avatar { get; set; }
         public string AvatarPath { get; set; }
+        public string CurrentPassword { get; set; }
+        public string NewPassword { get; set; }
     }
 }

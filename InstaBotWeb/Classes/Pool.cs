@@ -22,6 +22,5 @@ namespace InstaBotWeb.Classes
             TokePools = new Queue<CancellationTokenSource>();
             ClientPools = new Queue<ITelegramBotClient>();
         }
-
     }
 }

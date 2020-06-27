@@ -16,7 +16,7 @@
 	<div class="main">
 		<div class="container text-center">
 			<h1>Настройки аккаунта</h1>
-			<form asp-action="ChangesProfile" asp-controller="Account" class="row text-center" method="post" enctype="multipart/form-data" >
+			<form asp-action="ChangesProfile" asp-controller="Account" class="row text-center" method="post" enctype="multipart/form-data">
 				<div class="col-lg-6 offset-lg-3">
 					<label asp-for="FirstName">Новое Имя:</label>
 					<input asp-for="FirstName" type="text" placeholder="Введите имя" class="form-control">
@@ -27,6 +27,14 @@
 				</div>
 				<div class="col-lg-6 offset-lg-3 add-picture">
 					<input value="Выберите аватарку" name="Avatar" type="file" class="btn-primary">
+				</div>
+				<div class="col-lg-6 offset-lg-3">
+					<label asp-for="CurrentPassword">Текущий пароль:</label>
+					<input asp-for="CurrentPassword" type="password" placeholder="Введите пароль" class="form-control">
+				</div>
+				<div class="col-lg-6 offset-lg-3">
+					<label asp-for="NewPassword">Новый пароль:</label>
+					<input asp-for="NewPassword" type="password" placeholder="Введите новый пароль" class="form-control">
 				</div>
 				<input type="submit" id="change_submit" class="col-lg-4 offset-lg-4 btn-lg btn-primary btn-form">
 			</form>

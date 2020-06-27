@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleAuthorize.Crypto;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using TelegramSystem;
@@ -34,7 +35,8 @@ namespace InstaBotWeb
 
             services.AddTransient<IHashMethod, MD5Hash>();
 
-            services.AddSingleton<Pool>(Pool.Instance);
+         //   services.AddSingleton<Pool>(Pool.Instance);
+            services.AddSingleton<Dictionary<int, List<Pool>>>(new Dictionary<int, List<Pool>>());
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions
