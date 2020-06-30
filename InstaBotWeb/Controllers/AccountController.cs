@@ -130,7 +130,7 @@ namespace InstaBotWeb.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("", "Пользователь с таким адресом электронной почты уже существует");
                 }
             }
             return View(model);
@@ -221,7 +221,6 @@ namespace InstaBotWeb.Controllers
         //        }
         //        ModelState.AddModelError(string.Empty, "Некорректные логин и(или) пароль");
         //    }
-
         //    return View(model);
         //}
     }

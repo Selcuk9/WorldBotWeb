@@ -1,6 +1,7 @@
 using InstaBotWeb.Classes;
 using InstaBotWeb.Controllers;
 using InstaBotWeb.Models.DataBaseContext;
+using InstaBotWeb.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,21 +18,15 @@ namespace InstaBotWeb
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {   
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-    
+            Configuration.Bind("Project",new Config());
 
             services.AddDbContext<ApplicationContext>(options =>
-                 options.UseSqlServer(connection));
+                 options.UseSqlServer(Config.ConnectionString));
 
             services.AddTransient<IHashMethod, MD5Hash>();
 

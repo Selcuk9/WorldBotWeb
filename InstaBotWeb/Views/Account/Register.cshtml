@@ -1,13 +1,4 @@
 ﻿@model RegisterModel
-
-@{
-	Layout = "_Layout";
-}
-
-<head>
-	<link rel="stylesheet" href="~/css/form-styles/reg.css">
-</head>
-
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12 text-center">
@@ -16,7 +7,9 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="text-danger" asp-validation-summary="All"></div>
 		<div class="col-lg-12 text-center">
+
 			<form asp-controller="Account" asp-action="Register" method="post">
 				<div class="inputins">
 					<label asp-for="FirstName" class="label-input">Имя</label>

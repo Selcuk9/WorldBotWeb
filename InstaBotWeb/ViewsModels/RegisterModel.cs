@@ -19,7 +19,9 @@ namespace InstaBotWeb.ViewsModels
         [Compare("Password", ErrorMessage = "Пароль введен неверно")]
         public string ConfirmPassword { get; set; }
 
+        [Required(ErrorMessage = "Не указано Имя")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Не указано Фамилия")]
         public string LastName { get; set; }
     }
 }
