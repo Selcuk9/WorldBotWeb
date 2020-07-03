@@ -1,46 +1,38 @@
-﻿@model UserProfile
+﻿@{
+	Layout = "_LayoutProfile";
+}
+@model UserProfile
+<div class="main-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 offset-lg-3 text-center avatar-user">
+				<img src="@Model.AvatarPath" alt="avatar" style="width: 120px; height: 112px">
+			</div>
+			<div class="col-lg-6  offset-lg-3 text-center">
+				<div class="data-user">
+					<strong>Name: @Model.FirstName LastName: @Model.LastName</strong><br>
+					<strong>Email: </strong>
+					<p>@Model.Email</p><br>
+					<a asp-action="Logout" asp-controller="Account" class="btn-secondary">Выйти</a>
+				</div>
+			</div>
+		</div>
+		<div class="items-profile">
+			<ul class="row text-center">
+				<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+					<a asp-action="TelegramControl" asp-controller="Telegram"><img style="width: 112px; height: 112px;" src="/img/profile-img/telegram_icon.svg" alt="user"></a>
+				</li>
+				<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+					<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/vk_icon.svg" alt="user"></a>
+				</li>
+				<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+					<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/Instagram_icon.svg" alt="user"></a>
+				</li>
+				<li class="col-lg-3 col-md-6 col-sm-12 col-12">
+					<a asp-action="ChangesProfile" asp-controller="Account"><img style="width: 112px; height: 112px;" src="/img/profile-img/settings_icon.svg" alt="user"></a>
+				</li>
+			</ul>
+		</div>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>UserAccaunt</title>
-    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="/css/profile-styles/main-profile.css">
-</head>
-<body>
-    <div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 offset-lg-3 text-center avatar-user">
-                    <img src="@Model.AvatarPath" alt="avatar" style="width: 120px; height: 112px">
-                </div>
-                <div class="col-lg-6  offset-lg-3 text-center">
-					<div class="data-user">
-						<strong>Name: @Model.FirstName LastName: @Model.LastName</strong><br>
-						<strong>Email: </strong>
-						<p>@Model.Email</p><br>
-						<a asp-action="Logout" asp-controller="Account" class="btn-secondary">Выйти</a>
-					</div>
-                </div>
-            </div>
-            <div class="items-profile">
-				<ul class="row text-center">
-					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
-						<a asp-action="TelegramControl" asp-controller="Telegram"><img style="width: 112px; height: 112px;" src="/img/profile-img/telegram_icon.svg" alt="user"></a>
-					</li>
-					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
-						<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/vk_icon.svg" alt="user"></a>
-					</li>
-					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
-						<a asp-action="" asp-controller=""><img style="width: 112px; height: 112px;" src="/img/profile-img/Instagram_icon.svg" alt="user"></a>
-					</li>
-					<li class="col-lg-3 col-md-6 col-sm-12 col-12">
-						<a asp-action="ChangesProfile" asp-controller="Account"><img style="width: 112px; height: 112px;" src="/img/profile-img/settings_icon.svg" alt="user"></a>
-					</li>
-				</ul>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+	</div>
+</div>

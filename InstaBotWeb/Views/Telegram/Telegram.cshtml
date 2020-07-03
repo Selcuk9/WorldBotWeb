@@ -1,26 +1,30 @@
-﻿@model List<InstaBotWeb.Models.Telegram.DataBot>
-<!DOCTYPE html>
-<html lang="en">
+﻿@{
+	Layout = "_LayoutProfile";
+}
+@model List<InstaBotWeb.Models.Telegram.DataBot>
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
-	<link rel="stylesheet" href="/css/Telegram-styles/telegram.css">
 	<title>Document</title>
 </head>
-<body>
+<div>
 	<div class="container main">
 		<div class="row">
 			<div class="col-lg-4 control-panel">
 				<input type="text" class="form-control" placeholder="Token Вашего Бота" id='token'>
 				<input type="submit" class="btn-primary" id="btn-add" value="Добавить">
-				<input type="submit" class="btn-success" id="btn-run" value="Запустить">
-				<input type="submit" class="btn-success" id="btn-stop" value="Стоп">
+				<input type="submit" class="btn-success" id="btn-runAll" value="Запустить">
+				<input type="submit" class="btn-success" id="btn-stopAll" value="Стоп">
 				<div>
+					@*onclick="GetChat(event);"*@
 					<ul class="list-bots">
 						@for (int i = 0; i < Model.Count; i++)
 						{
-							<li onclick="GetChat(event);" id="@i">@Model[i].UsernameBot</li>
+							<li class="list-bots" id="@i">
+								@Model[i].UsernameBot
+								<a class="btn-start btn-primary" id="@Model[i].TokenBot">Запустить</a>
+								<a class="btn-stop btn-primary" id="@Model[i].TokenBot">&#10060;</a>
+							</li>
 						}
 					</ul>
 				</div>
@@ -31,5 +35,5 @@
 		</div>
 	</div>
 	<script src="/js/telegram-script/telegram.js"></script>
-</body>
-</html>
+</div>
+	

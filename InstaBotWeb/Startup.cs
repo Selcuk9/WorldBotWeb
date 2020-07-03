@@ -29,8 +29,6 @@ namespace InstaBotWeb
                  options.UseSqlServer(Config.ConnectionString));
 
             services.AddTransient<IHashMethod, MD5Hash>();
-
-         //   services.AddSingleton<Pool>(Pool.Instance);
             services.AddSingleton<Dictionary<int, List<Pool>>>(new Dictionary<int, List<Pool>>());
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

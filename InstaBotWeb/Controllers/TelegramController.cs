@@ -60,7 +60,7 @@ namespace InstaBotWeb.Controllers
         {
             string botJson = "Бот не найден";
             User bot;
-            var  tokenBot = token;
+            var tokenBot = token;
             try
             {
                 clientBot = new ClientBot(tokenBot);
@@ -83,33 +83,53 @@ namespace InstaBotWeb.Controllers
             return botJson;
         }
        /// <summary>
-       /// Запускаем бота и добавляем токен задач в сиписок с ключом
+       /// Запускаем бота и добавляем токен задач в cписок с ключом
        /// Каждый пользователь имеет свои задачи
        /// </summary>
         [HttpPost]
-        public void RunBot()
+        public void RunBots()
+        {
+            var tokenBots = GetBots();
+            foreach (var token in tokenBots)
+            {
+                RegisterBot(token.TokenBot);
+            }
+        }
+
+        [HttpPost]
+        public void RunBot([FromBody]string token)
+        {
+            RegisterBot(token);
+        }
+
+        private void RegisterBot(string token)
         {
             var pool = Pool.Instance;
+            var tokenBot = token;
             var idUser = ClaimUser.GetIdUser(User);
-            var threadsList = new List<Pool>(); 
-            var tokenBots = GetBots();
-            foreach (var item in tokenBots)
+
+            //запускаем и открываем задачу
+            clientBot = new ClientBot(tokenBot);
+            clientBot.GetBot();
+            clientBot.RunBotAsync(true);
+
+            //регистрация потока
+            var cancellationTokenSource = clientBot.TokenPools.Dequeue();
+            pool.ClientPools.Enqueue(clientBot.BotClient);
+            pool.TokePools.Enqueue(cancellationTokenSource);
+
+            //к ид юзера привязываем список его задач(или потоки)
+            if (!threads.ContainsKey(idUser))
             {
-                clientBot = new ClientBot(item.TokenBot);
-                clientBot.GetBot();
-                clientBot.RunBotAsync(true);
-     
-                var cancellationTokenSource = clientBot.tokenPools.Dequeue();
-                pool.ClientPools.Enqueue(clientBot.botClient);
-                pool.TokePools.Enqueue(cancellationTokenSource);
-
+                threads.Add(idUser, new List<Pool>());
             }
-            threadsList.Add(pool);
-            threads.Add(idUser, threadsList);
-
+            threads[idUser].Add(pool);
+            
         }
+
+
         [HttpPost]
-        public void StopBot()
+        public void StopBots()
         {
             var idUser = ClaimUser.GetIdUser(User);
             if (threads.ContainsKey(idUser))
@@ -121,6 +141,36 @@ namespace InstaBotWeb.Controllers
                     pool.ClientPools.Dequeue().StopReceiving();
                 }
                 threads.Remove(idUser);
+            }
+        }
+
+        /// <summary>
+        /// Ужас, надо это метод уменьшить
+        /// TODO nigga
+        /// </summary>
+        /// <param name="token"></param>
+        [HttpPost]
+        public void StopBot([FromBody]string token)
+        {
+            if (token != null)
+            {
+                var delBot = new ClientBot(token).GetBot();
+                var idUser = ClaimUser.GetIdUser(User);
+                var Mythreads = threads[idUser];
+                if (threads.ContainsKey(idUser))
+                {
+                    
+                    foreach (var pool in Mythreads)
+                    {
+                        var currentBot = pool.ClientPools.Peek().BotId;
+                        if (currentBot == delBot.Id)
+                        {
+                            pool.TokePools.Dequeue().Cancel();
+                            pool.ClientPools.Dequeue().StopReceiving();
+                        }
+                    }
+
+                } 
             }
         }
         
